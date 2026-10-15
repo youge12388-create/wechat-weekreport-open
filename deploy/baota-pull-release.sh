@@ -4,7 +4,7 @@
 set -euo pipefail
 
 readonly CONFIG_FILE="${DEPLOY_CONFIG_FILE:-/etc/zhoubao/deploy.env}"
-readonly DEFAULT_REPO="YOUR_GITHUB_OWNER/wechat-weekreport-open"
+readonly DEFAULT_REPO="youge12388-create/wechat-weekreport-open"
 readonly ASSET_NAME="zhoubao-release.tar.gz"
 readonly CHECKSUM_NAME="zhoubao-release.tar.gz.sha256"
 
