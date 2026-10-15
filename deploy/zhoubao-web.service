@@ -1,0 +1,21 @@
+[Unit]
+Description=Zhoubao Next.js web
+After=network-online.target zhoubao-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhoubao
+Group=zhoubao
+WorkingDirectory=/opt/zhoubao/current/frontend
+EnvironmentFile=/etc/zhoubao/zhoubao.env
+Environment=NODE_ENV=production
+Environment=API_BASE=http://127.0.0.1:8010
+ExecStart=/usr/bin/node /opt/zhoubao/current/frontend/server.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+[Unit]
+Description=Zhoubao FastAPI API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhoubao
+Group=zhoubao
+WorkingDirectory=/opt/zhoubao/current/backend
+EnvironmentFile=/etc/zhoubao/zhoubao.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/zhoubao/shared/venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8010 --workers 1
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

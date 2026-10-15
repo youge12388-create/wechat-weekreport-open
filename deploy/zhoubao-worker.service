@@ -1,0 +1,20 @@
+[Unit]
+Description=Zhoubao AI and scheduled sync worker
+After=network-online.target zhoubao-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=zhoubao
+Group=zhoubao
+WorkingDirectory=/opt/zhoubao/current/backend
+EnvironmentFile=/etc/zhoubao/zhoubao.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/zhoubao/shared/venv/bin/python -m app.worker
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

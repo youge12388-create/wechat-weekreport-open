@@ -1,0 +1,72 @@
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_tmp/
+.npm-cache/
+.venv/
+venv/
+
+backend/data/
+*.db
+*.sqlite3
+
+# 配置加密根密钥：自动生成，泄露即可解密设置页保存的密钥，绝不入库
+.config_secret.key
+*.tmp_config_secret.key
+
+# 部署包（可能含打包时的本地配置，不入库）
+zhoubao-deploy.zip
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+.DS_Store
+frontend/tsconfig.tsbuildinfo
+
+# 本地验证产物：日志、截图、临时构建目录，每次会话都会生成，不入库
+.agent/
+
+# 真实 Agent 评测材料可能包含可还原业务身份的信息，仅保存在本机受控目录
+docs/agent-evaluation/private/
+docs/agent-evaluation/results/
+
+# WorkBuddy 工具数据（含本机路径与工作笔记，不入库）
+.workbuddy/
+
+# 本地 AI 工具缓存与临时补丁，不入库
+.codex-commit.patch
+.impeccable/
+.zcode/
+
+# 简历素材：与项目代码无关，文件自身也注明「请勿提交仓库」
+简历-项目经验.md
+
+# Office 打开文档时生成的临时锁文件（docs/ 下的手册会产生）
+~$*
+
+# 简道云历史周报数据（含全员周报正文，涉隐私不入库；仅本机与资料库受控保存）
+docs/简道云*.xlsx
+docs/简道云导入_dryrun报告.txt
+docs/*.ref/
+
+# 本地验收日志、截图与测试临时目录，不属于开源代码
+*.log
+/temp_images/
+/.pytest-tmp*/
+/.pytest_tmp*/
+/.pytest_accessible_temp*/
+/.pytest_cov*/
+/docs/周报_*.md
+
+# 所有环境配置默认私有，仅允许公开示例文件
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# 独立开源仓库候选副本，禁止嵌套提交回私有仓库
+/open-source-export/

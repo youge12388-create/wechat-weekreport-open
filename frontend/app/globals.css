@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* 标题统一收紧字距：大字号下默认字距会显得松散 */
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tight;
+  }
+
+  ::selection {
+    background: rgb(var(--ui-primary, 26 28 40) / 0.16);
+  }
+}
+
+@layer components {
+  /* 容器层级靠「留白 + 分层底色 + 一层贴地阴影」建立，不再叠加双层软阴影 */
+  .card {
+    @apply rounded-card border border-border bg-card shadow-card;
+  }
+  /* 首页唯一视觉焦点：青绿渐变卡 + 白字，靠颜色与体量而不是阴影抢注意力 */
+  .card-hero {
+    @apply rounded-card border border-accent-deep/40 bg-gradient-to-br from-accent-deep to-accent text-accent-foreground shadow-hero;
+  }
+  /* 统一卡头：靠留白分栏，默认不画分割线（需要时用 .card-head-line） */
+  .card-head {
+    @apply flex flex-wrap items-center justify-between gap-3 px-5 py-4;
+  }
+  .card-head-line {
+    @apply border-b border-border/70;
+  }
+  /* 高斯模糊玻璃：只保留强遮蔽档，给模态面板这类下方仍有正文的浮层用。
+     侧栏已改为 .panel（半透明白、不模糊），不再使用玻璃效果。
+     正文卡片保持实心 —— 玻璃叠在长文本上会明显降低可读性。 */
+  .glass-strong {
+    @apply bg-glass-strong shadow-glass;
+    -webkit-backdrop-filter: blur(28px) saturate(1.2);
+    backdrop-filter: blur(28px) saturate(1.2);
+  }
+  /* 悬浮侧栏面板：半透明白 + 极浅描边 + 极弱大扩散阴影。
+     不是玻璃（不做模糊），只是一个「浮在灰底之上的独立面板」。 */
+  .panel {
+    @apply rounded-panel border border-panel-line shadow-panel;
+    background-color: rgb(var(--ui-surface, 255 255 255) / 0.9);
+  }
+  /* 短促的界面动效只用于呈现操作结果，不给数据页面增加常驻运动。 */
+  .ui-motion-fade-in {
+    animation: ui-motion-fade-in 180ms ease-out both;
+  }
+  .ui-motion-fade-out {
+    animation: ui-motion-fade-out 140ms ease-in both;
+  }
+  .ui-motion-dialog-in {
+    animation: ui-motion-dialog-in 220ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .ui-motion-dialog-out {
+    animation: ui-motion-dialog-out 160ms ease-in both;
+  }
+  .ui-motion-sheet-in {
+    animation: ui-motion-sheet-in 240ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+  .ui-motion-sheet-out {
+    animation: ui-motion-sheet-out 180ms cubic-bezier(.4, 0, 1, 1) both;
+  }
+  /* 首次取数时用短暂的流光区分「正在加载」与普通灰色占位。 */
+  .skeleton-shimmer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .skeleton-shimmer::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(
+      100deg,
+      transparent 18%,
+      rgb(var(--ui-primary, 26 28 40) / 0.08) 50%,
+      transparent 82%
+    );
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.35s ease-in-out infinite;
+    animation-delay: var(--skeleton-delay, 0ms);
+  }
+  .skeleton-shimmer-on-dark::after {
+    background: linear-gradient(
+      100deg,
+      transparent 18%,
+      rgb(255 255 255 / 0.16) 50%,
+      transparent 82%
+    );
+  }
+  .api-loading-progress {
+    animation: api-loading-progress 1.1s cubic-bezier(.65, 0, .35, 1) infinite;
+    box-shadow: 0 0 10px rgb(var(--ui-accent, 37 157 141) / 0.42);
+  }
+  /* 卡片内的分区标题条：用留白和字号建立层级，而不是再加一条分割线 */
+  .card-title {
+    @apply text-sm font-semibold text-foreground;
+  }
+  .card-desc {
+    @apply mt-1 text-xs leading-relaxed text-muted-foreground;
+  }
+  /* 设置页与详情页反复出现的统计小方块 */
+  .tile {
+    @apply rounded-control border border-border bg-muted/40 p-3;
+  }
+  .thead-cell {
+    @apply whitespace-nowrap px-5 py-3 text-left text-xs font-medium text-muted-foreground;
+  }
+  .tbody-cell {
+    @apply whitespace-nowrap px-5 py-3.5 text-sm;
+  }
+  /* 表格行分隔比卡片描边更浅，让表格读起来是「一张卡」而不是「一堆格子」 */
+  .tbody-row {
+    @apply border-t border-border/60 transition-colors;
+  }
+  /* 数字统一等宽，避免列表上下跳动 */
+  .num {
+    @apply tabular-nums;
+  }
+  /* 横向滚动的分类导航：保留滑动能力，但不显示滚动条（窄屏下很扎眼） */
+  .scroll-x-clean {
+    scrollbar-width: none;
+  }
+  .scroll-x-clean::-webkit-scrollbar {
+    display: none;
+  }
+  /* 企微文本卡片预览：后端拼的 description 用 .normal / .highlight 两档排版，
+     与企微客户端一致。缺了这两条，预览里每一行看起来一样，管理员看不出
+     哪一句会以高亮行展示（高亮行固定取每段文案的最后一行）。 */
+  .wechat-card-preview .normal {
+    @apply leading-relaxed;
+  }
+  .wechat-card-preview .highlight {
+    @apply mt-1 font-medium text-foreground;
+  }
+}
+
+@keyframes ui-motion-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ui-motion-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes ui-motion-dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ui-motion-dialog-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(4px) scale(.99); }
+}
+
+@keyframes ui-motion-sheet-in {
+  from { opacity: .85; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ui-motion-sheet-out {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: .85; transform: translateX(16px); }
+}
+
+@keyframes skeleton-shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes api-loading-progress {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(300%); }
+}
+
+/* 不支持 backdrop-filter 时把玻璃回退成不透明面：宁可没有磨砂，也不能让正文糊在背景上 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-strong {
+    @apply bg-surface;
+  }
+}
+
+/* 尊重系统的减弱动效偏好：只保留必要的状态切换 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* 动态进度条在减弱动效下停留在轨道内，避免动画结束后完全消失。 */
+  .api-loading-progress {
+    animation: none !important;
+    transform: translateX(0) !important;
+    background-color: rgb(var(--ui-accent, 37 157 141) / 1) !important;
+    opacity: 1 !important;
+  }
+}
